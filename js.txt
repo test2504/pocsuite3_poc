@@ -1,0 +1,53 @@
+// ==UserScript==
+// @name        poc爬虫
+// @namespace   Violentmonkey Scripts
+// @match       https://github.com/search
+// @grant        GM_xmlhttpRequest
+// @version     1.0
+// @author      顾北
+// @description 2021/7/12下午2:20:14
+// ==/UserScript==
+
+
+
+
+function sleep (time) {
+ return new Promise((resolve) => setTimeout(resolve, time));
+}
+  
+
+sleep(500).then(() => {
+  var storage =  window.localStorage;
+  var next_url=document.getElementsByClassName("next_page")
+
+ urls = []
+        var data=document.querySelectorAll('*')
+        data.forEach(element => {
+          urls.push(element.href)
+        })
+ domains = [];
+urls.forEach(url => {
+    if (url != undefined && url != "" && url.endsWith("py") == true){
+        url = new URL(url);
+        domains.push(url.href)
+    }
+});
+
+
+ GM_xmlhttpRequest({
+             url: 'http://127.0.0.1:9898/urls',
+             method: 'POST',
+             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+              data:'url='+domains,
+             responseType: "text",
+             onload: obj => {
+                 var data=obj.responseText;
+                console.log("data");
+
+                 
+                }
+             })
+  window.location.href=next_url[0].href
+
+
+ } )
